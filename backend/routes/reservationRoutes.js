@@ -1,17 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
-  getReservationsByCatway,
-  getReservationById,
+  getAllReservations,
   createReservation,
   updateReservation,
   deleteReservation,
-} = require('../controllers/reservationController');
+} = require("../controllers/reservationController");
 
-router.get('/:id/reservations', getReservationsByCatway);
-router.get('/:id/reservations/:idReservation', getReservationById);
-router.post('/:id/reservations', createReservation);
-router.put('/:id/reservations/:idReservation', updateReservation);
-router.delete('/:id/reservations/:idReservation', deleteReservation);
+router.get("/", getAllReservations);
+router.post("/", createReservation);
+router.put("/:id", updateReservation);
+router.delete("/:id", deleteReservation);
 
 module.exports = router;
