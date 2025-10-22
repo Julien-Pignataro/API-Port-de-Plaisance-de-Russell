@@ -21,7 +21,7 @@ API PORT DE RUSSELL/
 🛠️ Installation & lancement en local
 
 1️⃣ Cloner le projet
-git clone https://github.com/Julien-Pignataro/API-Port-de-Plaisance-de-Russell/
+git clone https://github.com/Julien-Pignataro/API-Port-de-Plaisance-de-Russell
 cd API PORT DE RUSSELL
 
 2️⃣ Installer les dépendances
