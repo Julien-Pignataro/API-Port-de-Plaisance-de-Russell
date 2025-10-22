@@ -1,72 +1,99 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 
-function UsersPage() {
-  const [users, setUsers] = useState([]);
-  const [newUser, setNewUser] = useState({ username: "", email: "", password: "" });
+function ReservationsPage() {
+  const [reservations, setReservations] = useState([]);
+  const [newReservation, setNewReservation] = useState({
+    catwayNumber: "",
+    clientName: "",
+    boatName: "",
+    startDate: "",
+    endDate: "",
+  });
 
-  // Charger les utilisateurs
-  const fetchUsers = async () => {
-    const res = await api.get("/users");
-    setUsers(res.data);
+  // Charger les réservations
+  const fetchReservations = async () => {
+    const res = await api.get("/reservations");
+    setReservations(res.data);
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchReservations();
   }, []);
 
-  // Ajouter un utilisateur
-  const addUser = async (e) => {
+  // Ajouter une réservation
+  const addReservation = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/users", newUser);
-      fetchUsers();
-      setNewUser({ username: "", email: "", password: "" });
+      await api.post(`/catways/${newReservation.catwayNumber}/reservations`, newReservation);
+      fetchReservations();
+      setNewReservation({ catwayNumber: "", clientName: "", boatName: "", startDate: "", endDate: "" });
     } catch (error) {
-      alert("Erreur lors de la création de l'utilisateur");
+      alert("Erreur lors de la création de la réservation");
     }
   };
 
-  // Supprimer un utilisateur
-  const deleteUser = async (email) => {
-    await api.delete(`/users/${email}`);
-    fetchUsers();
+  // Supprimer une réservation
+  const deleteReservation = async (catwayNumber, idReservation) => {
+    await api.delete(`/catways/${catwayNumber}/reservations/${idReservation}`);
+    fetchReservations();
   };
 
   return (
     <div>
-      <h2>👤 Gestion des Utilisateurs</h2>
+      <h2>📅 Gestion des Réservations</h2>
 
-      <form onSubmit={addUser} className="my-4">
+      <form onSubmit={addReservation} className="my-4">
+        <input
+          type="number"
+          placeholder="Numéro de Catway"
+          className="form-control mb-2"
+          value={newReservation.catwayNumber}
+          onChange={(e) => setNewReservation({ ...newReservation, catwayNumber: e.target.value })}
+        />
         <input
           type="text"
-          placeholder="Nom d'utilisateur"
+          placeholder="Nom du client"
           className="form-control mb-2"
-          value={newUser.username}
-          onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+          value={newReservation.clientName}
+          onChange={(e) => setNewReservation({ ...newReservation, clientName: e.target.value })}
         />
         <input
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Nom du bateau"
           className="form-control mb-2"
-          value={newUser.email}
-          onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+          value={newReservation.boatName}
+          onChange={(e) => setNewReservation({ ...newReservation, boatName: e.target.value })}
         />
         <input
-          type="password"
-          placeholder="Mot de passe"
+          type="date"
+          className="form-control mb-2"
+          value={newReservation.startDate}
+          onChange={(e) => setNewReservation({ ...newReservation, startDate: e.target.value })}
+        />
+        <input
+          type="date"
           className="form-control mb-3"
-          value={newUser.password}
-          onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+          value={newReservation.endDate}
+          onChange={(e) => setNewReservation({ ...newReservation, endDate: e.target.value })}
         />
-        <button className="btn btn-primary w-100">Ajouter un utilisateur</button>
+        <button className="btn btn-primary w-100">Créer la réservation</button>
       </form>
 
       <ul className="list-group">
-        {users.map((user) => (
-          <li key={user.email} className="list-group-item d-flex justify-content-between align-items-center">
-            <span>{user.username} - {user.email}</span>
-            <button className="btn btn-danger btn-sm" onClick={() => deleteUser(user.email)}>Supprimer</button>
+        {reservations.map((r) => (
+          <li key={r._id} className="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+              Catway #{r.catwayNumber} – {r.boatName} ({r.clientName})
+              <br />
+              {new Date(r.startDate).toLocaleDateString()} ➡️ {new Date(r.endDate).toLocaleDateString()}
+            </span>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => deleteReservation(r.catwayNumber, r._id)}
+            >
+              Supprimer
+            </button>
           </li>
         ))}
       </ul>
@@ -74,4 +101,4 @@ function UsersPage() {
   );
 }
 
-export default UsersPage;
+export default ReservationsPage;
