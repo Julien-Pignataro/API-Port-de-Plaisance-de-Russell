@@ -1,12 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const reservationSchema = new mongoose.Schema({
-  catwayNumber: { type: Number, required: true },
+  catwayNumber: { type: String, required: true },
   clientName: { type: String, required: true },
   boatName: { type: String, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
 });
 
-const Reservation = mongoose.model('Reservation', reservationSchema);
-module.exports = Reservation;
+module.exports = mongoose.model("Reservation", reservationSchema);
