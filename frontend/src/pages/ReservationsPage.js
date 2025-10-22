@@ -22,22 +22,29 @@ function ReservationsPage() {
   }, []);
 
   // Ajouter une réservation
-  const addReservation = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post(`/catways/${newReservation.catwayNumber}/reservations`, newReservation);
-      fetchReservations();
-      setNewReservation({ catwayNumber: "", clientName: "", boatName: "", startDate: "", endDate: "" });
-    } catch (error) {
-      alert("Erreur lors de la création de la réservation");
-    }
-  };
+const addReservation = async (e) => {
+  e.preventDefault();
+  try {
+    await api.post("/reservations", newReservation);
+    fetchReservations();
+    setNewReservation({
+      catwayNumber: "",
+      clientName: "",
+      boatName: "",
+      startDate: "",
+      endDate: "",
+    });
+  } catch (error) {
+    console.error(error);
+    alert("Erreur lors de la création de la réservation");
+  }
+};
 
   // Supprimer une réservation
-  const deleteReservation = async (catwayNumber, idReservation) => {
-    await api.delete(`/catways/${catwayNumber}/reservations/${idReservation}`);
-    fetchReservations();
-  };
+ const deleteReservation = async (idReservation) => {
+  await api.delete(`/reservations/${idReservation}`);
+  fetchReservations();
+};
 
   return (
     <div>
@@ -90,7 +97,7 @@ function ReservationsPage() {
             </span>
             <button
               className="btn btn-danger btn-sm"
-              onClick={() => deleteReservation(r.catwayNumber, r._id)}
+              onClick={() => deleteReservation( r._id)}
             >
               Supprimer
             </button>
